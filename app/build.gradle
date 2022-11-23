@@ -1,6 +1,8 @@
 plugins {
     id 'com.android.application'
     id 'org.jetbrains.kotlin.android'
+    id 'kotlin-android'
+    id 'kotlin-kapt'
 }
 
 android {
@@ -41,4 +43,20 @@ dependencies {
     testImplementation 'junit:junit:4.13.2'
     androidTestImplementation 'androidx.test.ext:junit:1.1.4'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.5.0'
+
+    // AAC : https://developer.android.com/jetpack/androidx/relReases/lifecycle?hl=ko#kotlin
+    def lifecycleVersion = '2.4.1'
+    implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:$lifecycleVersion"
+    implementation "androidx.lifecycle:lifecycle-livedata-ktx:$lifecycleVersion"
+
+    // Retrofit : https://square.github.io/retrofit/
+    def retrofitVersion = "2.9.0"
+    implementation "com.squareup.retrofit2:retrofit:$retrofitVersion"
+    implementation "com.squareup.retrofit2:converter-gson:$retrofitVersion"
+
+    // Glide : https://bumptech.github.io/glide/
+    def glideVersion = "4.14.2"
+    implementation "com.github.bumptech.glide:glide:$glideVersion"
+    kapt "android.arch.lifecycle:compiler:1.0.0"
+    kapt "com.github.bumptech.glide:compiler:$glideVersion"
 }
