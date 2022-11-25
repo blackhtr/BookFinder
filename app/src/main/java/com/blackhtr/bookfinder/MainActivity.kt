@@ -2,6 +2,7 @@ package com.blackhtr.bookfinder
 
 import android.os.Bundle
 import android.util.Log
+import android.view.inputmethod.InputMethodManager
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.blackhtr.bookfinder.data.DataRepository
@@ -31,7 +32,8 @@ class MainActivity : AppCompatActivity() {
         mBinding?.ivSearchBtn?.setOnClickListener {
             Log.i("TRHEO", "ivSearchBtn click")
             mBinding?.etSearchBookName?.text?.toString()?.run {
-                dataViewModel.searchKeyword(this)
+                (getSystemService(INPUT_METHOD_SERVICE) as InputMethodManager).hideSoftInputFromWindow(mBinding?.etSearchBookName?.windowToken, 0);
+                dataViewModel.searchKeyword(this, 0)
             }
         }
         mBinding?.etSearchBookName?.requestFocus()
