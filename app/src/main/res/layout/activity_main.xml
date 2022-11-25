@@ -35,7 +35,8 @@
                 android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:textColor="@color/black"
-                android:lines="1"
+                android:imeOptions="actionSearch"
+                android:inputType="text"
                 android:focusable="true"/>
 
             <ImageView

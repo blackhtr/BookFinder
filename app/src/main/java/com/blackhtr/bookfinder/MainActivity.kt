@@ -2,6 +2,7 @@ package com.blackhtr.bookfinder
 
 import android.os.Bundle
 import android.view.View
+import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -26,7 +27,7 @@ class MainActivity : AppCompatActivity(){
     }
 
     private fun initLayout(){
-        mBinding?.loadingIndicator?.visibility = View.GONE
+        showLoading(false)
         mBinding?.rvBookList?.run {
             this.layoutManager = LinearLayoutManager(this@MainActivity).apply { this.orientation = LinearLayoutManager.VERTICAL }
             this.adapter = VolumeAdapter(this@MainActivity)
@@ -36,7 +37,7 @@ class MainActivity : AppCompatActivity(){
                     mBinding?.rvBookList?.run {
                         mBinding?.etSearchBookName?.text?.toString()?.let {
                             if( this.adapter is VolumeAdapter && this.canScrollVertically(-1) && RecyclerView.SCROLL_STATE_IDLE == newState){
-                                mBinding?.loadingIndicator?.visibility = View.VISIBLE
+                                showLoading(true)
                                 dataViewModel.searchKeyword(it, (this.adapter as VolumeAdapter).itemCount -1)
                             }
                         }
@@ -44,15 +45,18 @@ class MainActivity : AppCompatActivity(){
                 }
             })
         }
-        mBinding?.ivSearchBtn?.setOnClickListener {
-            setTotalData(null)
-            mBinding?.loadingIndicator?.visibility = View.VISIBLE
-            mBinding?.etSearchBookName?.text?.toString()?.run {
-                (getSystemService(INPUT_METHOD_SERVICE) as InputMethodManager).hideSoftInputFromWindow(mBinding?.etSearchBookName?.windowToken, 0)
-                dataViewModel.searchKeyword(this, 0)
+        mBinding?.ivSearchBtn?.setOnClickListener { searchAction() }
+        mBinding?.etSearchBookName?.run {
+            this.imeOptions = EditorInfo.IME_ACTION_SEARCH
+            setOnEditorActionListener { _, actionId, _ ->
+                if(EditorInfo.IME_ACTION_SEARCH == actionId){
+                    searchAction()
+                    return@setOnEditorActionListener true
+                }
+                return@setOnEditorActionListener false
             }
+            requestFocus()
         }
-        mBinding?.etSearchBookName?.requestFocus()
     }
 
     override fun onDestroy() {
@@ -68,16 +72,28 @@ class MainActivity : AppCompatActivity(){
     private fun addObserver(){
         dataViewModel = DataViewModel(application, DataRepository())
         dataViewModel.TotalData.observe(this){ setTotalData(it) }
-
     }
 
     private fun setTotalData(totalData:TotalData?){
-        mBinding?.loadingIndicator?.visibility = View.GONE
+        showLoading(false)
         mBinding?.rvBookList?.adapter?.run {
             if(this is VolumeAdapter){
                 if(null != totalData && 1 < this.itemCount) this.addData(totalData)
                 else this.setData(totalData)
             }
+        }
+    }
+
+
+    private fun showLoading(isShow:Boolean){
+        mBinding?.loadingIndicator?.visibility = if(isShow) View.VISIBLE else View.GONE
+    }
+    private fun searchAction(){
+        setTotalData(null)
+        showLoading(true)
+        mBinding?.etSearchBookName?.text?.toString()?.run {
+            (getSystemService(INPUT_METHOD_SERVICE) as InputMethodManager).hideSoftInputFromWindow(mBinding?.etSearchBookName?.windowToken, 0)
+            dataViewModel.searchKeyword(this, 0)
         }
     }
 }
