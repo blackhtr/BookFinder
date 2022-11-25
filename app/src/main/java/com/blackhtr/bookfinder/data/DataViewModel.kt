@@ -14,7 +14,9 @@ class DataViewModel(app:Application, repository: DataRepository):AndroidViewMode
 
     fun searchKeyword(keyWord:String){
         viewModelScope.launch {
-            _TotalData.value = mRepository.searchVolumes(keyWord)
+            mRepository.searchVolumes(keyWord).let { response ->
+                _TotalData.value = if(response.isSuccessful) response.body() else null
+            }
         }
     }
 
