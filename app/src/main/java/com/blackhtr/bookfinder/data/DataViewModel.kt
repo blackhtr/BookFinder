@@ -12,9 +12,9 @@ class DataViewModel(app:Application, repository: DataRepository):AndroidViewMode
     private val _TotalData = MutableLiveData<TotalData?>()
     val TotalData : LiveData<TotalData?> get() = _TotalData
 
-    fun searchKeyword(keyWord:String){
+    fun searchKeyword(keyWord:String, startIndex:Int){
         viewModelScope.launch {
-            mRepository.searchVolumes(keyWord).let { response ->
+            mRepository.searchVolumes(keyWord, startIndex).let { response ->
                 _TotalData.value = if(response.isSuccessful) response.body() else null
             }
         }

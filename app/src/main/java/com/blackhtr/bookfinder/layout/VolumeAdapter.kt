@@ -39,6 +39,18 @@ class VolumeAdapter(context: Context) : RecyclerView.Adapter<ViewHolder>() {
         notifyDataSetChanged()
     }
 
+    @SuppressLint("NotifyDataSetChanged")
+    fun addData(data : TotalData?){
+        mDatas.removeAt(0)
+        mDatas.add(0, ItemInfo(VIEW_TYPE_RESULTS, data?.totalItems?:0))
+        data?.items?.run {
+            for(item in this){
+                mDatas.add(ItemInfo(VIEW_TYPE_ITEM, item))
+            }
+        }
+        notifyDataSetChanged()
+    }
+
     override fun getItemViewType(position: Int) = mDatas[position].viewType
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -71,8 +83,10 @@ class VolumeAdapter(context: Context) : RecyclerView.Adapter<ViewHolder>() {
                     val item = mDatas[position].value
                     if(item is Item){
                         var thumbnail:String = ""
-                        if(item.volumeInfo.imageLinks.containsKey(KEY_THUMBNAIL)) thumbnail = item.volumeInfo.imageLinks[KEY_THUMBNAIL]?:""
-                        if(thumbnail.isBlank() && item.volumeInfo.imageLinks.containsKey(KEY_SMALL_THUMBNAIL)) thumbnail = item.volumeInfo.imageLinks[KEY_SMALL_THUMBNAIL]?:""
+                        item.volumeInfo.imageLinks?.run {
+                            if(this.containsKey(KEY_THUMBNAIL)) thumbnail = this[KEY_THUMBNAIL]?:""
+                            if(thumbnail.isBlank() && this.containsKey(KEY_SMALL_THUMBNAIL)) thumbnail = this[KEY_SMALL_THUMBNAIL]?:""
+                        }
                         Glide.with(mContext).load(thumbnail).into(holder.ivVolumeThumbnail)
                         holder.tvVolumeTitle.text = item.volumeInfo.title
                         item.volumeInfo.authors.run {
@@ -98,5 +112,4 @@ class VolumeHolder(parent: ViewGroup) : ViewHolder(LayoutInflater.from(parent.co
     val ivVolumeThumbnail:ImageView = itemView.findViewById(R.id.ivVolumeThumbnail)
     val tvVolumeTitle:TextView = itemView.findViewById(R.id.tvVolumeTitle)
     val tvVolumeSubTitle:TextView = itemView.findViewById(R.id.tvVolumeSubTitle)
-
 }

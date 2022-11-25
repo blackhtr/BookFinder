@@ -19,7 +19,7 @@ data class VolumeInfo(
     @SerializedName("publisher")    val publisher:String = "",
     @SerializedName("publishedDate") val publishedDate:String = "",
     @SerializedName("description")  val description:String = "",
-    @SerializedName("imageLinks")   val imageLinks:Map<String, String>,
+    @SerializedName("imageLinks")   val imageLinks:Map<String, String>?,
     @SerializedName("previewLink")  val previewLink:String = "",
     @SerializedName("infoLink")     val infoLink:String = "",
     @SerializedName("canonicalVolumeLink") val canonicalVolumeLink:String = ""

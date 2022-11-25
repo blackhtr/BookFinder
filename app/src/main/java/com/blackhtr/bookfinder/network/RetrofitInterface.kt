@@ -8,5 +8,5 @@ import retrofit2.http.Query
 
 interface RetrofitInterface {
     @GET("books/v1/volumes")
-    suspend fun searchBook(@Query("q") q : String) : Response<TotalData>
+    suspend fun searchBook(@Query("q") q : String, @Query("maxResults") maxResults:Int, @Query("startIndex") startIndex:Int) : Response<TotalData>
 }
