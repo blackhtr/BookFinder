@@ -1,7 +1,6 @@
 package com.blackhtr.bookfinder
 
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import android.view.inputmethod.InputMethodManager
 import androidx.appcompat.app.AppCompatActivity
@@ -27,6 +26,7 @@ class MainActivity : AppCompatActivity(){
     }
 
     private fun initLayout(){
+        mBinding?.loadingIndicator?.visibility = View.GONE
         mBinding?.rvBookList?.run {
             this.layoutManager = LinearLayoutManager(this@MainActivity).apply { this.orientation = LinearLayoutManager.VERTICAL }
             this.adapter = VolumeAdapter(this@MainActivity)
@@ -36,6 +36,7 @@ class MainActivity : AppCompatActivity(){
                     mBinding?.rvBookList?.run {
                         mBinding?.etSearchBookName?.text?.toString()?.let {
                             if( this.adapter is VolumeAdapter && this.canScrollVertically(-1) && RecyclerView.SCROLL_STATE_IDLE == newState){
+                                mBinding?.loadingIndicator?.visibility = View.VISIBLE
                                 dataViewModel.searchKeyword(it, (this.adapter as VolumeAdapter).itemCount -1)
                             }
                         }
@@ -45,6 +46,7 @@ class MainActivity : AppCompatActivity(){
         }
         mBinding?.ivSearchBtn?.setOnClickListener {
             setTotalData(null)
+            mBinding?.loadingIndicator?.visibility = View.VISIBLE
             mBinding?.etSearchBookName?.text?.toString()?.run {
                 (getSystemService(INPUT_METHOD_SERVICE) as InputMethodManager).hideSoftInputFromWindow(mBinding?.etSearchBookName?.windowToken, 0)
                 dataViewModel.searchKeyword(this, 0)
@@ -70,6 +72,7 @@ class MainActivity : AppCompatActivity(){
     }
 
     private fun setTotalData(totalData:TotalData?){
+        mBinding?.loadingIndicator?.visibility = View.GONE
         mBinding?.rvBookList?.adapter?.run {
             if(this is VolumeAdapter){
                 if(null != totalData && 1 < this.itemCount) this.addData(totalData)
