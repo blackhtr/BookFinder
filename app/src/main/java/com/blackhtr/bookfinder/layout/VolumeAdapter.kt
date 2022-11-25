@@ -70,12 +70,13 @@ class VolumeAdapter(context: Context) : RecyclerView.Adapter<ViewHolder>() {
                 is VolumeHolder -> {
                     val item = mDatas[position].value
                     if(item is Item){
-                        var thumbnail:String = item.volumeInfo.imageLinks[KEY_THUMBNAIL]?:""
-                        if(thumbnail.isBlank()) thumbnail = item.volumeInfo.imageLinks[KEY_SMALL_THUMBNAIL]?:""
+                        var thumbnail:String = ""
+                        if(item.volumeInfo.imageLinks.containsKey(KEY_THUMBNAIL)) thumbnail = item.volumeInfo.imageLinks[KEY_THUMBNAIL]?:""
+                        if(thumbnail.isBlank() && item.volumeInfo.imageLinks.containsKey(KEY_SMALL_THUMBNAIL)) thumbnail = item.volumeInfo.imageLinks[KEY_SMALL_THUMBNAIL]?:""
                         Glide.with(mContext).load(thumbnail).into(holder.ivVolumeThumbnail)
                         holder.tvVolumeTitle.text = item.volumeInfo.title
                         item.volumeInfo.authors.run {
-                            holder.tvVolumeSubTitle.text = if(this.isNotEmpty()) this[0] else ""
+                             holder.tvVolumeSubTitle.text = if(this.isNullOrEmpty()) "" else this[0]
                         }
                     }
 

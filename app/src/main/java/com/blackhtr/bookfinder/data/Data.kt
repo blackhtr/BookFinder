@@ -15,7 +15,7 @@ data class Item(
 data class VolumeInfo(
     @SerializedName("title")        val title:String = "",
     @SerializedName("subtitle")     val subtitle:String = "",
-    @SerializedName("authors")      val authors:List<String>,
+    @SerializedName("authors")      val authors:List<String>?,
     @SerializedName("publisher")    val publisher:String = "",
     @SerializedName("publishedDate") val publishedDate:String = "",
     @SerializedName("description")  val description:String = "",
