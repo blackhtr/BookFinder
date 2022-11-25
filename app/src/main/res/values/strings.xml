@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">BookFinder</string>
+
+    <string name="results">Results(%1$s)</string>
 </resources>

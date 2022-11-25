@@ -3,17 +3,13 @@ package com.blackhtr.bookfinder.data
 import com.google.gson.annotations.SerializedName
 
 data class TotalData(
-    @SerializedName("kind")         val kind:String = "",
     @SerializedName("totalItems")   val totalItems:Int = -1,
     @SerializedName("items")        val items:List<Item>
 )
 
 data class Item(
-    @SerializedName("kind")         val kind:String = "",
     @SerializedName("id")           val id:String = "",
-    @SerializedName("etag")         val etag:String = "",
     @SerializedName("volumeInfo")   val volumeInfo:VolumeInfo
-
 )
 
 data class VolumeInfo(
